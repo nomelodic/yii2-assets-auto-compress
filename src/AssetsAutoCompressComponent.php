@@ -150,6 +150,13 @@ class AssetsAutoCompressComponent extends Component implements BootstrapInterfac
      * @var bool
      */
     public $noIncludeCssFilesOnPjax = true;
+
+    /**
+     * After processing the files (.css and .js), creates a copy of them, archived in GZip
+     * @var bool
+     */
+    public $filesToGZip = true;
+
     /**
      * @var bool|array|string|IFormatter
      */
@@ -482,6 +489,7 @@ JS
 
 
         if (file_exists($rootUrl)) {
+            if ($this->filesToGZip) file_put_contents($rootUrl . '.gz', gzencode($content, 9));
             $publicUrl = $publicUrl."?v=".filemtime($rootUrl);
             $resultFiles[$publicUrl] = Html::jsFile($publicUrl, $this->jsOptions);
             return $resultFiles;
@@ -687,6 +695,7 @@ JS
 
 
         if (file_exists($rootUrl)) {
+            if ($this->filesToGZip) file_put_contents($rootUrl . '.gz', gzencode($content, 9));
             $publicUrl = $publicUrl."?v=".filemtime($rootUrl);
             $resultFiles[$publicUrl] = Html::cssFile($publicUrl, $this->cssOptions);
             return $resultFiles;
